@@ -1,135 +1,193 @@
-# Mek - Exploding Kittens Championship Tracker
+# Movatos Exploding Kittens Game Tracker
 
-Track your Exploding Kittens game rounds, record actions, and see who's winning the championship!
+A Next.js application for tracking Exploding Kittens game rounds, player actions, and championship leaderboards.
 
 ## Features
 
-- 🎮 **Record Games**: Track players, actions, and game dates
-- 📊 **Analytics & Leaderboard**: View statistics with charts and detailed tables
-- 📜 **Game History**: View, edit, and delete past games
-- 👥 **Player Management**: Add, view, and manage players
-- 👤 **Player Statistics**: Individual player stats with detailed breakdowns
-- 📈 **Scoring System**: Automatic point calculation with absence penalties
-- 📅 **Date Range Presets**: Quick filters (This Month, Last Month, This Year, All Time)
-- 📥 **Export to CSV**: Download leaderboard data
-- 🔔 **Toast Notifications**: Better user feedback
-- 📱 **Mobile Responsive**: Works great on all devices
+- 🎮 Record game rounds with player actions
+- 📊 Analytics & Leaderboard with charts
+- 📈 Individual player statistics
+- 📥 CSV import for bulk game data
+- 🎨 Player color customization
+- 📱 Mobile-responsive design
 
-## Scoring Rules
+## Tech Stack
 
-- **1st Dead**: -1 point
-- **1st Exploded**: -3 points
-- **Barking & Diffuse**: -1 point
-- **Barking & Dead**: -3 points
-- **2nd Place**: +5 points
-- **Win**: +10 points
+- **Framework:** Next.js 14
+- **Database:** PostgreSQL (Neon)
+- **Styling:** Tailwind CSS
+- **Charts:** Recharts
+- **Deployment:** Vercel
 
-If a player misses games, their total points are decreased by the absence percentage.
+## Local Development Setup
 
-## Setup
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/arrrev/mek.git
+   cd mek
+   ```
 
-### 1. Install Dependencies
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
+3. **Set up environment variables**
+   Create a `.env.local` file:
+   ```env
+   DATABASE_URL=postgresql://user:password@host:port/database
+   ```
+
+4. **Set up the database**
+   - Create a PostgreSQL database
+   - Run the schema:
+     ```bash
+     psql $DATABASE_URL -f scripts/schema.sql
+     ```
+   - Add color column to players:
+     ```bash
+     psql $DATABASE_URL -f scripts/add_color_to_players.sql
+     ```
+   - Seed initial players:
+     ```bash
+     npm run seed
+     ```
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3001](http://localhost:3001) (or next available port)
+
+## Deployment to Vercel with Neon DB
+
+### 1. Set up Neon Database
+
+1. **Create a Neon account:**
+   - Go to [Neon Console](https://console.neon.tech/)
+   - Sign up or log in
+
+2. **Create a new project:**
+   - Click "Create Project"
+   - Choose a name (e.g., "mek-db")
+   - Select a region close to your users
+   - Click "Create Project"
+
+3. **Get your connection string:**
+   - After project creation, you'll see the connection string
+   - It looks like: `postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require`
+   - Copy this - you'll need it for Vercel
+
+4. **Set up the database schema:**
+   - In Neon dashboard, go to "SQL Editor"
+   - Copy and paste the contents of `scripts/schema.sql`
+   - Click "Run" to execute
+   - Then run `scripts/add_color_to_players.sql` in the same way
+
+### 2. Deploy to Vercel
+
+1. **Import your GitHub repository:**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New Project"
+   - Import `arrrev/mek` from GitHub
+   - Vercel will auto-detect Next.js
+
+2. **Configure Environment Variables:**
+   - Before deploying, go to "Environment Variables" in project settings
+   - Add a new variable:
+     - **Name:** `DATABASE_URL`
+     - **Value:** Your Neon connection string (from step 1.3)
+   - Make sure to enable it for:
+     - ✅ Production
+     - ✅ Preview
+     - ✅ Development
+   - Click "Save"
+
+3. **Deploy:**
+   - Click "Deploy"
+   - Vercel will build and deploy your app
+   - Wait for deployment to complete (usually 1-2 minutes)
+
+4. **Verify deployment:**
+   - Once deployed, visit your Vercel URL
+   - The app should load (database will be empty initially)
+
+### 3. Seed Initial Players
+
+After deployment, you need to add initial players. You have two options:
+
+**Option A: Using the app (recommended)**
+1. Visit your deployed app
+2. Go to "Record Game" (code: 1461)
+3. Click "Manage Players"
+4. Add players manually through the UI
+
+**Option B: Using SQL in Neon**
+1. Go to Neon SQL Editor
+2. Run this SQL (adjust names as needed):
+```sql
+INSERT INTO players (name, color) VALUES
+  ('Arev', '#FF6B35'),
+  ('Ani', '#FF6B35'),
+  ('Artash', '#FF6B35'),
+  ('Seroj', '#FF6B35'),
+  ('Khcho', '#FF6B35'),
+  ('Serine', '#FF6B35'),
+  ('Davo', '#FF6B35')
+ON CONFLICT (name) DO NOTHING;
 ```
 
-### 2. Set Up Database
-
-Create a PostgreSQL database and update `.env.local`:
-
-```env
-DATABASE_URL=postgresql://username:password@localhost:5432/mek_db
-```
-
-### 3. Create Database Schema
-
-Run the schema SQL file:
-
+**Option C: Using local script**
 ```bash
-psql -d mek_db -f scripts/schema.sql
-```
+# Update .env.local with your Neon connection string
+DATABASE_URL=postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require
 
-### 4. Seed Initial Players
-
-The project comes with a seed script for the initial players:
-
-```bash
+# Then run:
 npm run seed
 ```
 
-This will add: Arev, Ani, Artash, Seroj, Khcho, Serine, Davo
+### 4. Update Vercel Settings (Optional)
 
-### 5. Run Development Server
+- **Custom Domain:** Add your domain in Vercel project settings
+- **Environment Variables:** Add any additional variables if needed
+- **Build Settings:** Vercel auto-detects Next.js, but you can customize if needed
 
-```bash
-npm run dev
-```
+### Troubleshooting
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+- **Database connection errors:** Verify `DATABASE_URL` is set correctly in Vercel
+- **Schema errors:** Make sure you ran both SQL scripts in Neon
+- **Build errors:** Check Vercel build logs for details
 
-## Project Structure
+## Scoring System
 
-```
-mek/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── players/      # Player management API
-│   │   │   ├── games/         # Game recording API
-│   │   │   └── analytics/     # Analytics API
-│   │   ├── record/            # Record game page
-│   │   ├── analytics/         # Analytics & leaderboard page
-│   │   └── page.js            # Home page
-│   ├── components/
-│   │   └── PlayerManager.js   # Player management component
-│   └── lib/
-│       ├── db.js              # Database connection
-│       └── scoring.js         # Scoring logic
-├── scripts/
-│   ├── schema.sql             # Database schema
-│   └── seed_players.js        # Seed initial players
-└── package.json
-```
+- **Win:** +10 points
+- **2nd place:** +5 points
+- **Barking & Diffuse:** -1 point
+- **Barking & Dead:** -3 points
+- **1st exploded:** -1 point
+- **1st dead:** -5 points
 
-## Usage
+**Participation Penalty:**
+If a player misses games, their total points are multiplied by (games played / total games).
+Example: 20 total games, player played 18 → multiply by 0.9
 
-1. **Record a Game**: 
-   - Go to "Record Game" page
-   - Select the game date
-   - Select players who participated
-   - Add actions (1st dead, win, etc.) and assign them to players
-   - Save the game
+## Access Codes
 
-2. **View Analytics**:
-   - Go to "Analytics & Leaderboard" page
-   - Use quick presets (This Month, Last Month, etc.) or select custom dates
-   - View the leaderboard chart and detailed statistics
-   - Click on a player name to see their individual statistics
-   - Export data to CSV
+- **Record Game:** 1461
+- **Import Games:** 1461
 
-3. **Game History**:
-   - Go to "Game History" page
-   - View all recorded games
-   - Delete games if needed
+## Environment Variables
 
-4. **Player Statistics**:
-   - Click on any player name in the leaderboard
-   - View detailed stats including action breakdown and points per game
-   - Filter by different time periods
+- `DATABASE_URL` - PostgreSQL connection string (required)
 
-5. **Manage Players**:
-   - On the Record Game page, use the "Manage Players" section
-   - Add new players or delete existing ones
+## Scripts
 
-## Technologies
-
-- **Next.js 14** - React framework
-- **PostgreSQL** - Database
-- **Tailwind CSS** - Styling
-- **Recharts** - Chart library
-- **Movato Branding** - Custom theme colors
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run seed` - Seed initial players
 
 ## License
 
-ISC
+Private project
