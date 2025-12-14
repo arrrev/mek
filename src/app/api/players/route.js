@@ -54,9 +54,9 @@ export async function POST(request) {
       );
     }
     
-    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND' || error.message?.includes('connection')) {
       return NextResponse.json(
-        { error: 'Cannot connect to database. Please check your DATABASE_URL in .env.local' },
+        { error: 'Cannot connect to database. Please check your DATABASE_URL environment variable. For Vercel: Settings > Environment Variables. For local: .env.local' },
         { status: 500 }
       );
     }
@@ -94,9 +94,9 @@ export async function DELETE(request) {
       );
     }
     
-    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND' || error.message?.includes('connection')) {
       return NextResponse.json(
-        { error: 'Cannot connect to database. Please check your DATABASE_URL in .env.local' },
+        { error: 'Cannot connect to database. Please check your DATABASE_URL environment variable. For Vercel: Settings > Environment Variables. For local: .env.local' },
         { status: 500 }
       );
     }
