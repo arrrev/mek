@@ -14,6 +14,7 @@ import {
   Cell,
   LabelList,
 } from 'recharts';
+import Logo from '@/components/Logo';
 
 const DATE_PRESETS = {
   thisMonth: 'This Month',
@@ -129,7 +130,10 @@ export default function Analytics() {
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-4xl font-bold text-movato-secondary">Analytics & Leaderboard</h1>
+          <div className="flex items-center gap-4">
+            <Logo />
+            <h1 className="text-4xl font-bold text-movato-secondary">Analytics & Leaderboard</h1>
+          </div>
           <button onClick={() => router.push('/')} className="btn-secondary">
             ← Home
           </button>

@@ -1,11 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card max-w-2xl w-full text-center">
+        <div className="flex justify-center mb-6">
+          <Logo className="scale-150" />
+        </div>
         <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-kittens-red via-kittens-orange to-kittens-yellow bg-clip-text text-transparent">
           🐱 Exploding Kittens
         </h1>
