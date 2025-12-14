@@ -98,7 +98,21 @@ body {
   .card input[type="date"],
   .card input[type="datetime-local"],
   .card input[type="time"] {
-    max-width: calc(100% - 0.5rem);
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure form containers don't overflow */
+  form {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure all date inputs are constrained */
+  input[type="date"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   
   /* Better button spacing */
