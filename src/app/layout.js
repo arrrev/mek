@@ -2,7 +2,7 @@ import './globals.css';
 import { ToasterProvider } from '@/components/Toaster';
 
 export const metadata = {
-  title: 'MEK - Exploding Kittens Game Tracker',
+  title: "Movato's Kittens - Exploding Kittens Game Tracker",
   description: 'Track Exploding Kittens game rounds, player actions, and championship leaderboards',
   icons: {
     icon: '/favicon.svg',

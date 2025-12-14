@@ -11,7 +11,7 @@
     <text x="30" y="50" font-family="Arial, sans-serif" font-size="24" fill="#FFF" text-anchor="middle">💣</text>
     
     <!-- Text -->
-    <text x="60" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FF6B35">MEK</text>
-    <text x="60" y="55" font-family="Arial, sans-serif" font-size="14" fill="#666">Exploding Kittens</text>
+    <text x="60" y="35" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FF6B35">Movato's Kittens</text>
+    <text x="60" y="55" font-family="Arial, sans-serif" font-size="12" fill="#666">Exploding Kittens</text>
   </g>
 </svg>
