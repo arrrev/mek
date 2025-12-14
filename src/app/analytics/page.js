@@ -190,17 +190,17 @@ export default function Analytics() {
               <h2 className="text-2xl font-bold mb-4 text-movato-secondary">
                 Leaderboard Chart
               </h2>
-              <div className="h-96">
+              <div className="h-64 sm:h-80 md:h-96">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 60 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
                       dataKey="name" 
                       angle={-45}
                       textAnchor="end"
-                      height={100}
+                      height={80}
                       interval={0}
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 10 }}
                     />
                     <YAxis />
                     <Tooltip />
@@ -233,8 +233,8 @@ export default function Analytics() {
               <h2 className="text-2xl font-bold mb-4 text-movato-secondary">
                 Detailed Leaderboard
               </h2>
-              <div className="overflow-x-auto -mx-6 px-6">
-                <table className="w-full min-w-[800px]">
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+                <table className="w-full min-w-[600px] sm:min-w-[800px] text-sm sm:text-base">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left p-3 font-semibold">Rank</th>

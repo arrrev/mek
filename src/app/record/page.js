@@ -195,18 +195,18 @@ export default function RecordGame() {
   return (
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-4xl font-bold text-movato-secondary">Record Game</h1>
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Record Game</h1>
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={() => setShowPlayerManager(true)}
-              className="btn-secondary"
+              className="btn-secondary flex-1 sm:flex-none text-sm sm:text-base"
             >
               👥 Manage Players
             </button>
             <button
               onClick={() => router.push('/')}
-              className="btn-secondary"
+              className="btn-secondary flex-1 sm:flex-none text-sm sm:text-base"
             >
               ← Home
             </button>
@@ -272,7 +272,7 @@ export default function RecordGame() {
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Select Players ({selectedPlayers.length} selected)
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
               {players.map((player) => (
                 <button
                   key={player.id}

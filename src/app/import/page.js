@@ -207,9 +207,9 @@ export default function ImportPage() {
   return (
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-4xl font-bold text-movato-secondary">Import Games</h1>
-          <button onClick={() => router.push('/')} className="btn-secondary">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Import Games</h1>
+          <button onClick={() => router.push('/')} className="btn-secondary w-full sm:w-auto text-sm sm:text-base">
             ← Home
           </button>
         </div>

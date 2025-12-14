@@ -177,14 +177,14 @@ export default function PlayerStats() {
   return (
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-movato-secondary">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">
               {data.player.name}
             </h1>
-            <p className="text-gray-600 mt-1">Player Statistics</p>
+            <p className="text-gray-600 mt-1 text-sm sm:text-base">Player Statistics</p>
           </div>
-          <button onClick={() => router.push('/analytics')} className="btn-secondary">
+          <button onClick={() => router.push('/analytics')} className="btn-secondary w-full sm:w-auto text-sm sm:text-base">
             ← Back
           </button>
         </div>

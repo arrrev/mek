@@ -55,6 +55,28 @@ body {
     -webkit-tap-highlight-color: transparent;
     user-select: none;
   }
+  
+  /* Improve card padding on mobile */
+  .card {
+    padding: 1rem !important;
+  }
+  
+  /* Better spacing for mobile */
+  h1 {
+    line-height: 1.2;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .card {
+    padding: 1.25rem;
+  }
 }
 
 /* Touch manipulation for better mobile performance */

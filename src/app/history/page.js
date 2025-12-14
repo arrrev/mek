@@ -71,13 +71,13 @@ export default function GameHistory() {
   return (
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-4xl font-bold text-movato-secondary">Game History</h1>
-          <div className="flex gap-2">
-            <Link href="/record" className="btn-primary">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Game History</h1>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Link href="/record" className="btn-primary flex-1 sm:flex-none text-sm sm:text-base">
               + New Game
             </Link>
-            <button onClick={() => router.push('/')} className="btn-secondary">
+            <button onClick={() => router.push('/')} className="btn-secondary flex-1 sm:flex-none text-sm sm:text-base">
               ← Home
             </button>
           </div>
