@@ -202,32 +202,29 @@ export default function PlayerStats() {
               </button>
             ))}
           </div>
-          <div className="flex gap-4 items-end flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex-1 w-full sm:min-w-[200px]">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 Start Date
               </label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="input-field"
+                className="input-field w-full text-sm sm:text-base"
               />
             </div>
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="flex-1 w-full sm:min-w-[200px]">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 End Date
               </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="input-field"
+                className="input-field w-full text-sm sm:text-base"
               />
             </div>
-            <button onClick={fetchStats} className="btn-primary">
-              Update
-            </button>
           </div>
         </div>
 
