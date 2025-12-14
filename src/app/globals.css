@@ -22,20 +22,44 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply bg-movato-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl;
+    @apply bg-movato-primary hover:bg-opacity-90 active:bg-opacity-80 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl text-base min-h-[44px] touch-manipulation;
   }
   
   .btn-secondary {
-    @apply bg-movato-secondary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl;
+    @apply bg-movato-secondary hover:bg-opacity-90 active:bg-opacity-80 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl text-base min-h-[44px] touch-manipulation;
   }
   
   .card {
-    @apply bg-white rounded-xl shadow-xl p-6 backdrop-blur-sm bg-opacity-95;
+    @apply bg-white rounded-xl shadow-xl p-4 sm:p-6 backdrop-blur-sm bg-opacity-95;
   }
   
   .input-field {
-    @apply w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-movato-primary transition-colors;
+    @apply w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-movato-primary transition-colors;
   }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  body {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Better touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text selection on buttons */
+  button {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+}
+
+/* Touch manipulation for better mobile performance */
+.touch-manipulation {
+  touch-action: manipulation;
 }
 
 @keyframes slide-in {

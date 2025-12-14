@@ -41,15 +41,25 @@ export default function PlayerStats() {
   const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
+    // Set default to current month: from 1st of current month (included) to 1st of next month (not included)
     const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-      .toISOString()
-      .split('T')[0];
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split('T')[0];
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    
+    // Format as YYYY-MM-DD using local timezone
+    const formatDate = (y, m, d) => {
+      const date = new Date(y, m, d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    const firstDay = formatDate(year, month, 1);
+    const nextMonthFirstDay = formatDate(year, month + 1, 1);
+    
     setStartDate(firstDay);
-    setEndDate(lastDay);
+    setEndDate(nextMonthFirstDay);
   }, []);
 
   useEffect(() => {
@@ -75,38 +85,39 @@ export default function PlayerStats() {
 
   const setDatePreset = (preset) => {
     const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    
+    // Format as YYYY-MM-DD using local timezone
+    const formatDate = (y, m, d) => {
+      const date = new Date(y, m, d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
     let start, end;
 
     switch (preset) {
       case 'thisMonth':
-        start = new Date(now.getFullYear(), now.getMonth(), 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-          .toISOString()
-          .split('T')[0];
+        // From this month's 1st day (included) to next month's 1st day (not included)
+        start = formatDate(year, month, 1);
+        end = formatDate(year, month + 1, 1);
         break;
       case 'lastMonth':
-        start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), now.getMonth(), 0)
-          .toISOString()
-          .split('T')[0];
+        // From last month's 1st day (included) to this month's 1st day (not included)
+        start = formatDate(year, month - 1, 1);
+        end = formatDate(year, month, 1);
         break;
       case 'thisYear':
-        start = new Date(now.getFullYear(), 0, 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), 11, 31)
-          .toISOString()
-          .split('T')[0];
+        // From this year January 1st (included) to next year January 1st (not included)
+        start = formatDate(year, 0, 1);
+        end = formatDate(year + 1, 0, 1);
         break;
       case 'allTime':
         start = '2000-01-01';
-        end = new Date(now.getFullYear() + 1, 11, 31)
-          .toISOString()
-          .split('T')[0];
+        end = formatDate(year + 1, 11, 31);
         break;
       default:
         return;

@@ -11,14 +11,24 @@ export async function GET(request, { params }) {
     const endDate = searchParams.get('endDate');
 
     // Default to current month if no dates provided
+    // Use local timezone to avoid day shifts
+    const formatDateLocal = (y, m, d) => {
+      const year = y;
+      const month = String(m + 1).padStart(2, '0');
+      const day = String(d).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
     let start, end;
     if (startDate && endDate) {
       start = startDate;
       end = endDate;
     } else {
       const now = new Date();
-      start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-      end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      start = formatDateLocal(year, month, 1);
+      end = formatDateLocal(year, month + 1, 1);
     }
 
     // Get player info
@@ -37,8 +47,9 @@ export async function GET(request, { params }) {
     const player = playerResult.rows[0];
 
     // Get total games in period
+    // Start date is inclusive (>=), end date is exclusive (<)
     const totalGamesResult = await pool.query(
-      'SELECT COUNT(*) as count FROM games WHERE game_date BETWEEN $1 AND $2',
+      'SELECT COUNT(*) as count FROM games WHERE game_date >= $1 AND game_date < $2',
       [start, end]
     );
     const totalGames = parseInt(totalGamesResult.rows[0].count);
@@ -49,7 +60,7 @@ export async function GET(request, { params }) {
       SELECT COUNT(DISTINCT gp.game_id) as games_played
       FROM game_participants gp
       INNER JOIN games g ON gp.game_id = g.id
-      WHERE gp.player_id = $1 AND g.game_date BETWEEN $2 AND $3
+      WHERE gp.player_id = $1 AND g.game_date >= $2 AND g.game_date < $3
       `,
       [id, start, end]
     );
@@ -63,7 +74,7 @@ export async function GET(request, { params }) {
         COUNT(*) as count
       FROM game_actions ga
       INNER JOIN games g ON ga.game_id = g.id
-      WHERE ga.player_id = $1 AND g.game_date BETWEEN $2 AND $3
+      WHERE ga.player_id = $1 AND g.game_date >= $2 AND g.game_date < $3
       GROUP BY ga.action_type
       `,
       [id, start, end]
@@ -80,8 +91,8 @@ export async function GET(request, { params }) {
             jsonb_build_object(
               'action_type', ga.action_type,
               'points', CASE 
-                WHEN ga.action_type = 'first_dead' THEN -1
-                WHEN ga.action_type = 'first_exploded' THEN -3
+                WHEN ga.action_type = 'first_dead' THEN -5
+                WHEN ga.action_type = 'first_exploded' THEN -1
                 WHEN ga.action_type = 'barking_diffuse' THEN -1
                 WHEN ga.action_type = 'barking_dead' THEN -3
                 WHEN ga.action_type = 'second_place' THEN 5
@@ -95,7 +106,7 @@ export async function GET(request, { params }) {
       FROM games g
       INNER JOIN game_participants gp ON g.id = gp.game_id
       LEFT JOIN game_actions ga ON g.id = ga.game_id AND ga.player_id = $1
-      WHERE gp.player_id = $1 AND g.game_date BETWEEN $2 AND $3
+      WHERE gp.player_id = $1 AND g.game_date >= $2 AND g.game_date < $3
       GROUP BY g.id, g.game_date
       ORDER BY g.game_date DESC
       `,

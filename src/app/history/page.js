@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToaster } from '@/components/Toaster';
 
 const ACTION_TYPES = {
   first_dead: '1st Dead',
@@ -15,6 +16,7 @@ const ACTION_TYPES = {
 
 export default function GameHistory() {
   const router = useRouter();
+  const { success, error: toastError } = useToaster();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingGame, setEditingGame] = useState(null);
@@ -37,7 +39,7 @@ export default function GameHistory() {
   };
 
   const handleDelete = async (gameId) => {
-    if (!confirm('Are you sure you want to delete this game?')) return;
+    if (!window.confirm('Are you sure you want to delete this game?')) return;
 
     try {
       const response = await fetch(`/api/games/${gameId}`, {
@@ -45,14 +47,15 @@ export default function GameHistory() {
       });
 
       if (response.ok) {
+        success('Game deleted successfully!');
         fetchGames();
-        alert('Game deleted successfully');
       } else {
-        alert('Failed to delete game');
+        const errorData = await response.json();
+        toastError(errorData.error || 'Failed to delete game');
       }
     } catch (error) {
       console.error('Error deleting game:', error);
-      alert('Failed to delete game');
+      toastError('Failed to delete game. Please check your database connection.');
     }
   };
 

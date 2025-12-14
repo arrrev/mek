@@ -76,10 +76,19 @@ export async function POST(request) {
     try {
       await client.query('BEGIN');
 
+      // Format date in local timezone to avoid timezone conversion issues
+      const formatDateLocal = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      
       // Insert game
+      const defaultDate = gameDate || formatDateLocal(new Date());
       const gameResult = await client.query(
         'INSERT INTO games (game_date) VALUES ($1) RETURNING id, game_date',
-        [gameDate || new Date().toISOString().split('T')[0]]
+        [defaultDate]
       );
       const gameId = gameResult.rows[0].id;
 
@@ -93,6 +102,17 @@ export async function POST(request) {
 
       // Insert actions
       if (actions && actions.length > 0) {
+        // Validate that each action type appears only once
+        const actionTypes = actions.map(a => a.actionType);
+        const uniqueActionTypes = new Set(actionTypes);
+        if (actionTypes.length !== uniqueActionTypes.size) {
+          await client.query('ROLLBACK');
+          return NextResponse.json(
+            { error: 'Each action type can only be assigned once per game' },
+            { status: 400 }
+          );
+        }
+
         for (const action of actions) {
           await client.query(
             'INSERT INTO game_actions (game_id, player_id, action_type) VALUES ($1, $2, $3)',

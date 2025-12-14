@@ -11,6 +11,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Cell,
+  LabelList,
 } from 'recharts';
 
 const DATE_PRESETS = {
@@ -28,16 +30,25 @@ export default function Analytics() {
   const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
-    // Set default to current month
+    // Set default to current month: from 1st of current month (included) to 1st of next month (not included)
     const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-      .toISOString()
-      .split('T')[0];
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split('T')[0];
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    
+    // Format as YYYY-MM-DD using local timezone
+    const formatDate = (y, m, d) => {
+      const date = new Date(y, m, d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    const firstDay = formatDate(year, month, 1);
+    const nextMonthFirstDay = formatDate(year, month + 1, 1);
+    
     setStartDate(firstDay);
-    setEndDate(lastDay);
+    setEndDate(nextMonthFirstDay);
   }, []);
 
   useEffect(() => {
@@ -63,38 +74,39 @@ export default function Analytics() {
 
   const setDatePreset = (preset) => {
     const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    
+    // Format as YYYY-MM-DD using local timezone
+    const formatDate = (y, m, d) => {
+      const date = new Date(y, m, d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
     let start, end;
 
     switch (preset) {
       case 'thisMonth':
-        start = new Date(now.getFullYear(), now.getMonth(), 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-          .toISOString()
-          .split('T')[0];
+        // From this month's 1st day (included) to next month's 1st day (not included)
+        start = formatDate(year, month, 1);
+        end = formatDate(year, month + 1, 1);
         break;
       case 'lastMonth':
-        start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), now.getMonth(), 0)
-          .toISOString()
-          .split('T')[0];
+        // From last month's 1st day (included) to this month's 1st day (not included)
+        start = formatDate(year, month - 1, 1);
+        end = formatDate(year, month, 1);
         break;
       case 'thisYear':
-        start = new Date(now.getFullYear(), 0, 1)
-          .toISOString()
-          .split('T')[0];
-        end = new Date(now.getFullYear(), 11, 31)
-          .toISOString()
-          .split('T')[0];
+        // From this year January 1st (included) to next year January 1st (not included)
+        start = formatDate(year, 0, 1);
+        end = formatDate(year + 1, 0, 1);
         break;
       case 'allTime':
         start = '2000-01-01';
-        end = new Date(now.getFullYear() + 1, 11, 31)
-          .toISOString()
-          .split('T')[0];
+        end = formatDate(year + 1, 11, 31);
         break;
       default:
         return;
@@ -104,57 +116,14 @@ export default function Analytics() {
     setEndDate(end);
   };
 
-  const exportToCSV = () => {
-    if (!data || !data.leaderboard) return;
 
-    const headers = [
-      'Rank',
-      'Player',
-      'Total Points',
-      'Games Played',
-      'Total Games',
-      'Absence Rate %',
-      'Wins',
-      '2nd Place',
-      '1st Dead',
-      '1st Exploded',
-      'Barking & Diffuse',
-      'Barking & Dead',
-    ];
-
-    const rows = data.leaderboard.map((player, index) => [
-      index + 1,
-      player.playerName,
-      player.totalPoints.toFixed(2),
-      player.gamesPlayed,
-      player.totalGames,
-      player.absenceRate.toFixed(1),
-      player.stats.win,
-      player.stats.second_place,
-      player.stats.first_dead,
-      player.stats.first_exploded,
-      player.stats.barking_diffuse,
-      player.stats.barking_dead,
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.join(',')),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `leaderboard_${startDate}_${endDate}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-  const chartData = data?.leaderboard.map((player) => ({
-    name: player.playerName,
-    points: player.totalPoints,
-  })) || [];
+  const chartData = data?.leaderboard && Array.isArray(data.leaderboard)
+    ? data.leaderboard.map((player) => ({
+        name: player.playerName,
+        points: parseFloat(player.totalPoints.toFixed(2)),
+        color: player.color || '#FF6B35',
+      }))
+    : [];
 
   return (
     <div className="min-h-screen p-4 py-8">
@@ -204,19 +173,6 @@ export default function Analytics() {
                 className="input-field"
               />
             </div>
-            <div className="flex gap-2">
-              <button onClick={fetchAnalytics} className="btn-primary">
-                Update
-              </button>
-              {data && (
-                <button
-                  onClick={exportToCSV}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
-                >
-                  📥 Export CSV
-                </button>
-              )}
-            </div>
           </div>
         </div>
 
@@ -232,17 +188,38 @@ export default function Analytics() {
               </h2>
               <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
+                  <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                    <XAxis 
+                      dataKey="name" 
+                      angle={-45}
+                      textAnchor="end"
+                      height={100}
+                      interval={0}
+                      tick={{ fontSize: 12 }}
+                    />
                     <YAxis />
                     <Tooltip />
                     <Legend />
                     <Bar
                       dataKey="points"
-                      fill="#FF6B35"
                       name="Total Points"
-                    />
+                      radius={[8, 8, 0, 0]}
+                    >
+                      <LabelList 
+                        dataKey="points" 
+                        position="top"
+                        formatter={(value) => value > 0 ? `+${value.toFixed(1)}` : value.toFixed(1)}
+                        style={{ fontSize: '12px', fontWeight: 'bold' }}
+                        fill="#333"
+                      />
+                      {chartData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color || '#FF6B35'} 
+                        />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -270,7 +247,7 @@ export default function Analytics() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.leaderboard.map((player, index) => (
+                    {data?.leaderboard && Array.isArray(data.leaderboard) ? data.leaderboard.map((player, index) => (
                       <tr
                         key={player.playerId}
                         className="border-b border-gray-100 hover:bg-gray-50"
@@ -279,12 +256,18 @@ export default function Analytics() {
                           {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
                         </td>
                         <td className="p-3 font-medium">
-                          <button
-                            onClick={() => router.push(`/player/${player.playerId}`)}
-                            className="text-movato-secondary hover:text-movato-primary hover:underline"
-                          >
-                            {player.playerName}
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: player.color || '#FF6B35' }}
+                            />
+                            <button
+                              onClick={() => router.push(`/player/${player.playerId}`)}
+                              className="text-movato-secondary hover:text-movato-primary hover:underline"
+                            >
+                              {player.playerName}
+                            </button>
+                          </div>
                         </td>
                         <td className="p-3 text-right font-bold text-lg">
                           <span
@@ -327,7 +310,13 @@ export default function Analytics() {
                           {player.stats.barking_dead}
                         </td>
                       </tr>
-                    ))}
+                    )) : (
+                      <tr>
+                        <td colSpan="11" className="p-4 text-center text-gray-500">
+                          No data available
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
