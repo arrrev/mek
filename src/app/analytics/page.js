@@ -139,42 +139,42 @@ export default function Analytics() {
           </button>
         </div>
 
-        <div className="card mb-6">
-          <h2 className="text-xl font-bold mb-4">Select Period</h2>
+        <div className="card mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Select Period</h2>
           
-          <div className="mb-4 flex flex-wrap gap-2">
+          <div className="mb-3 sm:mb-4 flex flex-wrap gap-2">
             {Object.entries(DATE_PRESETS).map(([key, label]) => (
               <button
                 key={key}
                 onClick={() => setDatePreset(key)}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium"
+                className="px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-xs sm:text-sm font-medium flex-shrink-0"
               >
                 {label}
               </button>
             ))}
           </div>
 
-          <div className="flex gap-4 items-end flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex-1 w-full sm:min-w-[200px]">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 Start Date
               </label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="input-field"
+                className="input-field w-full text-sm sm:text-base"
               />
             </div>
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="flex-1 w-full sm:min-w-[200px]">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 End Date
               </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="input-field"
+                className="input-field w-full text-sm sm:text-base"
               />
             </div>
           </div>
@@ -186,25 +186,26 @@ export default function Analytics() {
           </div>
         ) : data ? (
           <>
-            <div className="card mb-6">
-              <h2 className="text-2xl font-bold mb-4 text-movato-secondary">
+            <div className="card mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-movato-secondary break-words">
                 Leaderboard Chart
               </h2>
-              <div className="h-64 sm:h-80 md:h-96">
+              <div className="h-64 sm:h-80 md:h-96 w-full overflow-x-auto">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 60 }}>
+                  <BarChart data={chartData} margin={{ top: 20, right: 5, left: -25, bottom: 70 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
                       dataKey="name" 
                       angle={-45}
                       textAnchor="end"
-                      height={80}
+                      height={90}
                       interval={0}
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 9 }}
+                      width={60}
                     />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
+                    <YAxis width={40} tick={{ fontSize: 10 }} />
+                    <Tooltip wrapperStyle={{ fontSize: '12px' }} />
+                    <Legend wrapperStyle={{ fontSize: '12px' }} />
                     <Bar
                       dataKey="points"
                       name="Total Points"
@@ -230,11 +231,11 @@ export default function Analytics() {
             </div>
 
             <div className="card">
-              <h2 className="text-2xl font-bold mb-4 text-movato-secondary">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-movato-secondary break-words">
                 Detailed Leaderboard
               </h2>
-              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
-                <table className="w-full min-w-[600px] sm:min-w-[800px] text-sm sm:text-base">
+              <div className="overflow-x-auto -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
+                <table className="w-full min-w-[600px] sm:min-w-[800px] text-xs sm:text-sm md:text-base">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left p-3 font-semibold">Rank</th>
