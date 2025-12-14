@@ -212,6 +212,7 @@ export default function PlayerStats() {
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 className="input-field w-full text-sm sm:text-base"
+                style={{ maxWidth: '100%', boxSizing: 'border-box' }}
               />
             </div>
             <div className="flex-1 w-full sm:min-w-[200px]">
@@ -223,6 +224,7 @@ export default function PlayerStats() {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 className="input-field w-full text-sm sm:text-base"
+                style={{ maxWidth: '100%', boxSizing: 'border-box' }}
               />
             </div>
           </div>

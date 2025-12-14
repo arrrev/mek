@@ -35,6 +35,8 @@ body {
   
   .input-field {
     @apply w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-movato-primary transition-colors;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -76,6 +78,25 @@ body {
   input, textarea, select {
     max-width: 100%;
     box-sizing: border-box;
+    width: 100%;
+  }
+  
+  /* Fix date input overflow on mobile */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* Prevent date picker from overflowing container */
+  .card input[type="date"],
+  .card input[type="datetime-local"],
+  .card input[type="time"] {
+    max-width: calc(100% - 0.5rem);
   }
   
   /* Better button spacing */

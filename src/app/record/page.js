@@ -263,8 +263,9 @@ export default function RecordGame() {
               type="date"
               value={gameDate}
               onChange={(e) => setGameDate(e.target.value)}
-              className="input-field"
+              className="input-field w-full max-w-full"
               required
+              style={{ maxWidth: '100%', boxSizing: 'border-box' }}
             />
           </div>
 
