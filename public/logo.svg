@@ -8,7 +8,7 @@
   <g>
     <!-- Exploding icon -->
     <circle cx="30" cy="40" r="20" fill="url(#logoGrad)" stroke="#FFF" stroke-width="2"/>
-    <text x="30" y="50" font-family="Arial, sans-serif" font-size="24" fill="#FFF" text-anchor="middle">=�</text>
+    <text x="30" y="50" font-family="Arial, sans-serif" font-size="24" fill="#FFF" text-anchor="middle">💣</text>
     
     <!-- Text -->
     <text x="60" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FF6B35">MEK</text>
