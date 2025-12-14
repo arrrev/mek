@@ -14,12 +14,17 @@ const ACTION_TYPES = {
   win: 'Win',
 };
 
+const ACCESS_CODE = '1461';
+
 export default function GameHistory() {
   const router = useRouter();
   const { success, error: toastError } = useToaster();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingGame, setEditingGame] = useState(null);
+  const [showDeleteAuth, setShowDeleteAuth] = useState(false);
+  const [deleteAccessCode, setDeleteAccessCode] = useState('');
+  const [gameToDelete, setGameToDelete] = useState(null);
 
   useEffect(() => {
     fetchGames();
@@ -38,9 +43,44 @@ export default function GameHistory() {
     }
   };
 
-  const handleDelete = async (gameId) => {
-    if (!window.confirm('Are you sure you want to delete this game?')) return;
+  const checkDeleteAuth = () => {
+    const authStatus = sessionStorage.getItem('record_game_auth');
+    return authStatus === 'true';
+  };
 
+  const handleDeleteClick = (gameId) => {
+    if (checkDeleteAuth()) {
+      // Already authenticated, proceed with delete confirmation
+      if (window.confirm('Are you sure you want to delete this game?')) {
+        performDelete(gameId);
+      }
+    } else {
+      // Not authenticated, show access code prompt
+      setGameToDelete(gameId);
+      setShowDeleteAuth(true);
+      setDeleteAccessCode('');
+    }
+  };
+
+  const handleDeleteAuthSubmit = (e) => {
+    e.preventDefault();
+    if (deleteAccessCode === ACCESS_CODE) {
+      sessionStorage.setItem('record_game_auth', 'true');
+      success('Access granted!');
+      setShowDeleteAuth(false);
+      if (gameToDelete) {
+        if (window.confirm('Are you sure you want to delete this game?')) {
+          performDelete(gameToDelete);
+        }
+        setGameToDelete(null);
+      }
+    } else {
+      toastError('Invalid access code');
+      setDeleteAccessCode('');
+    }
+  };
+
+  const performDelete = async (gameId) => {
     try {
       const response = await fetch(`/api/games/${gameId}`, {
         method: 'DELETE',
@@ -109,8 +149,8 @@ export default function GameHistory() {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleDelete(game.id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      onClick={() => handleDeleteClick(game.id)}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm sm:text-base"
                     >
                       Delete
                     </button>
@@ -153,6 +193,46 @@ export default function GameHistory() {
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Delete Access Code Modal */}
+        {showDeleteAuth && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="card max-w-md w-full">
+              <h3 className="text-xl font-bold text-movato-secondary mb-2">Access Required</h3>
+              <p className="text-gray-600 mb-4 text-sm">Please enter the access code to delete games.</p>
+              <form onSubmit={handleDeleteAuthSubmit}>
+                <input
+                  type="password"
+                  value={deleteAccessCode}
+                  onChange={(e) => setDeleteAccessCode(e.target.value)}
+                  placeholder="Enter access code"
+                  className="input-field mb-4 text-center text-2xl tracking-widest"
+                  autoFocus
+                  maxLength={10}
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    className="btn-primary flex-1"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDeleteAuth(false);
+                      setGameToDelete(null);
+                      setDeleteAccessCode('');
+                    }}
+                    className="btn-secondary flex-1"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>
