@@ -31,6 +31,8 @@ body {
   
   .card {
     @apply bg-white rounded-xl shadow-xl p-4 sm:p-6 backdrop-blur-sm bg-opacity-95;
+    overflow-x: hidden;
+    max-width: 100%;
   }
   
   .input-field {
