@@ -1,4 +1,5 @@
 import './globals.css';
+import { ToasterProvider } from '@/components/Toaster';
 
 export const metadata = {
   title: 'Mek - Exploding Kittens Championship Tracker',
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ToasterProvider>{children}</ToasterProvider>
+      </body>
     </html>
   );
 }

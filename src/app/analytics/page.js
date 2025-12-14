@@ -13,6 +13,13 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+const DATE_PRESETS = {
+  thisMonth: 'This Month',
+  lastMonth: 'Last Month',
+  thisYear: 'This Year',
+  allTime: 'All Time',
+};
+
 export default function Analytics() {
   const router = useRouter();
   const [data, setData] = useState(null);
@@ -54,6 +61,96 @@ export default function Analytics() {
     }
   };
 
+  const setDatePreset = (preset) => {
+    const now = new Date();
+    let start, end;
+
+    switch (preset) {
+      case 'thisMonth':
+        start = new Date(now.getFullYear(), now.getMonth(), 1)
+          .toISOString()
+          .split('T')[0];
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+          .toISOString()
+          .split('T')[0];
+        break;
+      case 'lastMonth':
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+          .toISOString()
+          .split('T')[0];
+        end = new Date(now.getFullYear(), now.getMonth(), 0)
+          .toISOString()
+          .split('T')[0];
+        break;
+      case 'thisYear':
+        start = new Date(now.getFullYear(), 0, 1)
+          .toISOString()
+          .split('T')[0];
+        end = new Date(now.getFullYear(), 11, 31)
+          .toISOString()
+          .split('T')[0];
+        break;
+      case 'allTime':
+        start = '2000-01-01';
+        end = new Date(now.getFullYear() + 1, 11, 31)
+          .toISOString()
+          .split('T')[0];
+        break;
+      default:
+        return;
+    }
+
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const exportToCSV = () => {
+    if (!data || !data.leaderboard) return;
+
+    const headers = [
+      'Rank',
+      'Player',
+      'Total Points',
+      'Games Played',
+      'Total Games',
+      'Absence Rate %',
+      'Wins',
+      '2nd Place',
+      '1st Dead',
+      '1st Exploded',
+      'Barking & Diffuse',
+      'Barking & Dead',
+    ];
+
+    const rows = data.leaderboard.map((player, index) => [
+      index + 1,
+      player.playerName,
+      player.totalPoints.toFixed(2),
+      player.gamesPlayed,
+      player.totalGames,
+      player.absenceRate.toFixed(1),
+      player.stats.win,
+      player.stats.second_place,
+      player.stats.first_dead,
+      player.stats.first_exploded,
+      player.stats.barking_diffuse,
+      player.stats.barking_dead,
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leaderboard_${startDate}_${endDate}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const chartData = data?.leaderboard.map((player) => ({
     name: player.playerName,
     points: player.totalPoints,
@@ -71,8 +168,21 @@ export default function Analytics() {
 
         <div className="card mb-6">
           <h2 className="text-xl font-bold mb-4">Select Period</h2>
-          <div className="flex gap-4 items-end">
-            <div className="flex-1">
+          
+          <div className="mb-4 flex flex-wrap gap-2">
+            {Object.entries(DATE_PRESETS).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setDatePreset(key)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-4 items-end flex-wrap">
+            <div className="flex-1 min-w-[200px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Start Date
               </label>
@@ -83,7 +193,7 @@ export default function Analytics() {
                 className="input-field"
               />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-[200px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 End Date
               </label>
@@ -94,9 +204,19 @@ export default function Analytics() {
                 className="input-field"
               />
             </div>
-            <button onClick={fetchAnalytics} className="btn-primary">
-              Update
-            </button>
+            <div className="flex gap-2">
+              <button onClick={fetchAnalytics} className="btn-primary">
+                Update
+              </button>
+              {data && (
+                <button
+                  onClick={exportToCSV}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+                >
+                  📥 Export CSV
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -132,8 +252,8 @@ export default function Analytics() {
               <h2 className="text-2xl font-bold mb-4 text-movato-secondary">
                 Detailed Leaderboard
               </h2>
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div className="overflow-x-auto -mx-6 px-6">
+                <table className="w-full min-w-[800px]">
                   <thead>
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left p-3 font-semibold">Rank</th>
@@ -158,7 +278,14 @@ export default function Analytics() {
                         <td className="p-3 font-bold text-lg">
                           {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
                         </td>
-                        <td className="p-3 font-medium">{player.playerName}</td>
+                        <td className="p-3 font-medium">
+                          <button
+                            onClick={() => router.push(`/player/${player.playerId}`)}
+                            className="text-movato-secondary hover:text-movato-primary hover:underline"
+                          >
+                            {player.playerName}
+                          </button>
+                        </td>
                         <td className="p-3 text-right font-bold text-lg">
                           <span
                             className={

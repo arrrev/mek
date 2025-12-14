@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PlayerManager from '@/components/PlayerManager';
+import { useToaster } from '@/components/Toaster';
 
 const ACTION_TYPES = [
   { value: 'first_dead', label: '1st Dead', points: -1 },
@@ -15,6 +16,7 @@ const ACTION_TYPES = [
 
 export default function RecordGame() {
   const router = useRouter();
+  const { success, error: toastError } = useToaster();
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [gameDate, setGameDate] = useState(new Date().toISOString().split('T')[0]);
@@ -45,7 +47,7 @@ export default function RecordGame() {
 
   const addAction = (actionType) => {
     if (selectedPlayers.length === 0) {
-      alert('Please select at least one player first');
+      toastError('Please select at least one player first');
       return;
     }
 
@@ -73,14 +75,14 @@ export default function RecordGame() {
     e.preventDefault();
 
     if (selectedPlayers.length === 0) {
-      alert('Please select at least one player');
+      toastError('Please select at least one player');
       return;
     }
 
     // Validate all actions have players assigned
     const incompleteActions = actions.filter((a) => !a.playerId);
     if (incompleteActions.length > 0) {
-      alert('Please assign players to all actions');
+      toastError('Please assign players to all actions');
       return;
     }
 
@@ -100,15 +102,15 @@ export default function RecordGame() {
       });
 
       if (response.ok) {
-        alert('Game recorded successfully!');
-        router.push('/analytics');
+        success('Game recorded successfully!');
+        setTimeout(() => router.push('/analytics'), 1000);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to record game');
+        toastError(error.error || 'Failed to record game');
       }
     } catch (error) {
       console.error('Error recording game:', error);
-      alert('Failed to record game');
+      toastError('Failed to record game');
     } finally {
       setLoading(false);
     }
@@ -147,7 +149,7 @@ export default function RecordGame() {
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Select Players ({selectedPlayers.length} selected)
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {players.map((player) => (
                 <button
                   key={player.id}
@@ -169,7 +171,7 @@ export default function RecordGame() {
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Record Actions
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
               {ACTION_TYPES.map((action) => (
                 <button
                   key={action.value}

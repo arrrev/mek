@@ -6,8 +6,14 @@ Track your Exploding Kittens game rounds, record actions, and see who's winning 
 
 - 🎮 **Record Games**: Track players, actions, and game dates
 - 📊 **Analytics & Leaderboard**: View statistics with charts and detailed tables
+- 📜 **Game History**: View, edit, and delete past games
 - 👥 **Player Management**: Add, view, and manage players
+- 👤 **Player Statistics**: Individual player stats with detailed breakdowns
 - 📈 **Scoring System**: Automatic point calculation with absence penalties
+- 📅 **Date Range Presets**: Quick filters (This Month, Last Month, This Year, All Time)
+- 📥 **Export to CSV**: Download leaderboard data
+- 🔔 **Toast Notifications**: Better user feedback
+- 📱 **Mobile Responsive**: Works great on all devices
 
 ## Scoring Rules
 
@@ -97,10 +103,22 @@ mek/
 
 2. **View Analytics**:
    - Go to "Analytics & Leaderboard" page
-   - Select a date range (defaults to current month)
+   - Use quick presets (This Month, Last Month, etc.) or select custom dates
    - View the leaderboard chart and detailed statistics
+   - Click on a player name to see their individual statistics
+   - Export data to CSV
 
-3. **Manage Players**:
+3. **Game History**:
+   - Go to "Game History" page
+   - View all recorded games
+   - Delete games if needed
+
+4. **Player Statistics**:
+   - Click on any player name in the leaderboard
+   - View detailed stats including action breakdown and points per game
+   - Filter by different time periods
+
+5. **Manage Players**:
    - On the Record Game page, use the "Manage Players" section
    - Add new players or delete existing ones
 

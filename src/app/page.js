@@ -13,12 +13,15 @@ export default function Home() {
           Championship Tracker
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Link href="/record" className="btn-primary text-lg py-4">
             📝 Record Game
           </Link>
           <Link href="/analytics" className="btn-secondary text-lg py-4">
             📊 Analytics & Leaderboard
+          </Link>
+          <Link href="/history" className="bg-kittens-purple hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl text-lg py-4">
+            📜 Game History
           </Link>
         </div>
 

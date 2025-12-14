@@ -37,3 +37,18 @@ body {
     @apply w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-movato-primary transition-colors;
   }
 }
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
