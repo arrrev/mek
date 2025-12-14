@@ -127,16 +127,18 @@ export default function Analytics() {
     : [];
 
   return (
-    <div className="min-h-screen p-4 py-8">
+    <div className="min-h-screen p-3 sm:p-4 py-6 sm:py-8">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Logo />
-            <h1 className="text-4xl font-bold text-movato-secondary">Analytics & Leaderboard</h1>
+        <div className="mb-4 sm:mb-6">
+          <div className="flex items-center justify-between mb-3 gap-2">
+            <Logo className="flex-shrink-0 min-w-0" />
+            <button onClick={() => router.push('/')} className="btn-secondary text-xs sm:text-sm px-3 sm:px-6 py-2 sm:py-3 flex-shrink-0 ml-2">
+              ← Home
+            </button>
           </div>
-          <button onClick={() => router.push('/')} className="btn-secondary">
-            ← Home
-          </button>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-movato-secondary break-words">
+            Analytics & Leaderboard
+          </h1>
         </div>
 
         <div className="card mb-4 sm:mb-6">
