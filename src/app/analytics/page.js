@@ -29,6 +29,8 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState('desc'); // 'asc' or 'desc'
 
   useEffect(() => {
     // Set default to current month: from 1st of current month (included) to 1st of next month (not included)
@@ -118,13 +120,94 @@ export default function Analytics() {
   };
 
 
-  const chartData = data?.leaderboard && Array.isArray(data.leaderboard)
-    ? data.leaderboard.map((player) => ({
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // Toggle direction if clicking the same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new column and default to descending
+      setSortColumn(column);
+      setSortDirection('desc');
+    }
+  };
+
+  const getSortedLeaderboard = () => {
+    if (!data?.leaderboard || !Array.isArray(data.leaderboard) || !sortColumn) {
+      return data?.leaderboard || [];
+    }
+
+    const sorted = [...data.leaderboard].sort((a, b) => {
+      let aValue, bValue;
+
+      switch (sortColumn) {
+        case 'totalPoints':
+          aValue = a.totalPoints;
+          bValue = b.totalPoints;
+          break;
+        case 'gamesPlayed':
+          aValue = a.gamesPlayed;
+          bValue = b.gamesPlayed;
+          break;
+        case 'absenceRate':
+          aValue = a.absenceRate;
+          bValue = b.absenceRate;
+          break;
+        case 'win':
+          aValue = a.stats.win;
+          bValue = b.stats.win;
+          break;
+        case 'secondPlace':
+          aValue = a.stats.second_place;
+          bValue = b.stats.second_place;
+          break;
+        case 'firstDead':
+          aValue = a.stats.first_dead;
+          bValue = b.stats.first_dead;
+          break;
+        case 'firstExploded':
+          aValue = a.stats.first_exploded;
+          bValue = b.stats.first_exploded;
+          break;
+        case 'barkingDiffuse':
+          aValue = a.stats.barking_diffuse;
+          bValue = b.stats.barking_diffuse;
+          break;
+        case 'barkingDead':
+          aValue = a.stats.barking_dead;
+          bValue = b.stats.barking_dead;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return sorted;
+  };
+
+  const sortedLeaderboard = getSortedLeaderboard();
+
+  const chartData = sortedLeaderboard && Array.isArray(sortedLeaderboard)
+    ? sortedLeaderboard.map((player) => ({
         name: player.playerName,
         points: parseFloat(player.totalPoints.toFixed(2)),
         color: player.color || '#FF6B35',
       }))
     : [];
+
+  const SortIcon = ({ column }) => {
+    if (sortColumn !== column) {
+      return <span className="text-gray-400 ml-1">↕</span>;
+    }
+    return sortDirection === 'asc' ? (
+      <span className="text-movato-secondary ml-1">↑</span>
+    ) : (
+      <span className="text-movato-secondary ml-1">↓</span>
+    );
+  };
 
   return (
     <div className="min-h-screen p-3 sm:p-4 py-6 sm:py-8">
@@ -244,19 +327,64 @@ export default function Analytics() {
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left p-3 font-semibold">Rank</th>
                       <th className="text-left p-3 font-semibold">Player</th>
-                      <th className="text-right p-3 font-semibold">Total Points</th>
-                      <th className="text-right p-3 font-semibold">Games Played</th>
-                      <th className="text-right p-3 font-semibold">Absence Rate</th>
-                      <th className="text-center p-3 font-semibold">Win</th>
-                      <th className="text-center p-3 font-semibold">2nd Place</th>
-                      <th className="text-center p-3 font-semibold">1st Dead</th>
-                      <th className="text-center p-3 font-semibold">1st Exploded</th>
-                      <th className="text-center p-3 font-semibold">Barking & Diffuse</th>
-                      <th className="text-center p-3 font-semibold">Barking & Dead</th>
+                      <th 
+                        className="text-right p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('totalPoints')}
+                      >
+                        Total Points <SortIcon column="totalPoints" />
+                      </th>
+                      <th 
+                        className="text-right p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('gamesPlayed')}
+                      >
+                        Games Played <SortIcon column="gamesPlayed" />
+                      </th>
+                      <th 
+                        className="text-right p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('absenceRate')}
+                      >
+                        Absence Rate <SortIcon column="absenceRate" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('win')}
+                      >
+                        Win <SortIcon column="win" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('secondPlace')}
+                      >
+                        2nd Place <SortIcon column="secondPlace" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('firstDead')}
+                      >
+                        1st Dead <SortIcon column="firstDead" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('firstExploded')}
+                      >
+                        1st Exploded <SortIcon column="firstExploded" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('barkingDiffuse')}
+                      >
+                        Barking & Diffuse <SortIcon column="barkingDiffuse" />
+                      </th>
+                      <th 
+                        className="text-center p-3 font-semibold cursor-pointer hover:bg-gray-100 select-none"
+                        onClick={() => handleSort('barkingDead')}
+                      >
+                        Barking & Dead <SortIcon column="barkingDead" />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data?.leaderboard && Array.isArray(data.leaderboard) ? data.leaderboard.map((player, index) => (
+                    {sortedLeaderboard && Array.isArray(sortedLeaderboard) ? sortedLeaderboard.map((player, index) => (
                       <tr
                         key={player.playerId}
                         className="border-b border-gray-100 hover:bg-gray-50"
