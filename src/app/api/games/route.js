@@ -4,6 +4,16 @@ import { NextResponse } from 'next/server';
 // GET all games with participants and actions
 export async function GET(request) {
   try {
+    // Check if database is configured
+    const databaseUrl = process.env.DATABASE_URL || process.env.db_DATABASE_URL;
+    if (!databaseUrl) {
+      console.error('DATABASE_URL is not configured');
+      return NextResponse.json(
+        { error: 'Database connection not configured. Please set DATABASE_URL environment variable.' },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
@@ -52,8 +62,12 @@ export async function GET(request) {
     return NextResponse.json(result.rows);
   } catch (error) {
     console.error('Error fetching games:', error);
+    // Provide more detailed error information in development
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? error.message || 'Failed to fetch games'
+      : 'Failed to fetch games';
     return NextResponse.json(
-      { error: 'Failed to fetch games' },
+      { error: errorMessage, details: process.env.NODE_ENV === 'development' ? error.stack : undefined },
       { status: 500 }
     );
   }
