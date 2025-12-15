@@ -4,12 +4,20 @@ import { NextResponse } from 'next/server';
 // GET all games with participants and actions
 export async function GET(request) {
   try {
-    // Check if database is configured
+    // Check if database is configured (pool will be undefined if connection string is missing)
     const databaseUrl = process.env.DATABASE_URL || process.env.db_DATABASE_URL;
     if (!databaseUrl) {
       console.error('DATABASE_URL is not configured');
+      // Log available database-related env vars for debugging
+      const dbEnvVars = Object.keys(process.env).filter(k => 
+        k.includes('DATABASE') || k.includes('POSTGRES') || k.startsWith('db_')
+      );
+      console.error('Available database env vars:', dbEnvVars);
       return NextResponse.json(
-        { error: 'Database connection not configured. Please set DATABASE_URL environment variable.' },
+        { 
+          error: 'Database connection not configured. Please set DATABASE_URL or db_DATABASE_URL environment variable.',
+          hint: 'If using Vercel Neon integration, ensure db_DATABASE_URL is set and redeploy.'
+        },
         { status: 500 }
       );
     }
