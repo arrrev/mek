@@ -15,6 +15,7 @@ import {
   LabelList,
 } from 'recharts';
 import Logo from '@/components/Logo';
+import { ACTION_POINTS } from '@/lib/scoring';
 
 const DATE_PRESETS = {
   thisMonth: 'This Month',
@@ -31,6 +32,7 @@ export default function Analytics() {
   const [endDate, setEndDate] = useState('');
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('desc'); // 'asc' or 'desc'
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   useEffect(() => {
     // Set default to current month: from 1st of current month (included) to 1st of next month (not included)
@@ -234,6 +236,74 @@ export default function Analytics() {
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-movato-secondary break-words">
             Analytics & Leaderboard
           </h1>
+        </div>
+
+        <div className="card mb-4 sm:mb-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-movato-secondary">How It Works</h2>
+            <button
+              onClick={() => setShowHowItWorks(!showHowItWorks)}
+              className="text-sm sm:text-base text-movato-secondary hover:text-movato-primary font-medium"
+            >
+              {showHowItWorks ? '▼ Hide' : '▶ Show'}
+            </button>
+          </div>
+          
+          {showHowItWorks && (
+            <div className="space-y-4 text-sm sm:text-base">
+              <div>
+                <h3 className="font-semibold mb-2 text-gray-800">Scoring System</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                  <div className="flex items-center justify-between p-2 bg-green-50 rounded">
+                    <span className="font-medium">Win</span>
+                    <span className="text-green-600 font-bold">+{ACTION_POINTS.win} points</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                    <span className="font-medium">2nd Place</span>
+                    <span className="text-blue-600 font-bold">+{ACTION_POINTS.second_place} points</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-red-50 rounded">
+                    <span className="font-medium">1st Dead</span>
+                    <span className="text-red-600 font-bold">{ACTION_POINTS.first_dead} points</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-red-100 rounded">
+                    <span className="font-medium">1st Exploded</span>
+                    <span className="text-red-700 font-bold">{ACTION_POINTS.first_exploded} points</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-orange-50 rounded">
+                    <span className="font-medium">Barking & Diffuse</span>
+                    <span className="text-orange-600 font-bold">{ACTION_POINTS.barking_diffuse} points</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-orange-100 rounded">
+                    <span className="font-medium">Barking & Dead</span>
+                    <span className="text-orange-700 font-bold">{ACTION_POINTS.barking_dead} points</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2 text-gray-800">Calculation Logic</h3>
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg space-y-2">
+                  <p className="text-gray-700">
+                    <strong>1. Base Points:</strong> Sum all action points for the selected period.
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>2. Participation Penalty:</strong> If a player missed games, their total points are multiplied by:
+                  </p>
+                  <div className="ml-4 p-2 bg-white rounded border-l-4 border-movato-secondary">
+                    <code className="text-sm">(Games Played / Total Games)</code>
+                  </div>
+                  <p className="text-gray-700 text-xs sm:text-sm mt-2">
+                    <strong>Example:</strong> If there were 20 total games and a player participated in 18 games, 
+                    their points are multiplied by 18/20 = 0.9 (10% penalty for missing 2 games).
+                  </p>
+                  <p className="text-gray-700 text-xs sm:text-sm">
+                    <strong>Note:</strong> Players who didn't play any games receive 0 points, regardless of their action history.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="card mb-4 sm:mb-6">
