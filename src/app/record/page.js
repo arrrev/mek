@@ -6,8 +6,8 @@ import PlayerManager from '@/components/PlayerManager';
 import { useToaster } from '@/components/Toaster';
 
 const ACTION_TYPES = [
-  { value: 'first_dead', label: '1st Dead', points: -1 },
-  { value: 'first_exploded', label: '1st Exploded', points: -3 },
+  { value: 'first_dead', label: '1st Dead', points: -5 },
+  { value: 'first_exploded', label: '1st Exploded', points: -1 },
   { value: 'barking_diffuse', label: 'Barking & Diffuse', points: -1 },
   { value: 'barking_dead', label: 'Barking & Dead', points: -3 },
   { value: 'second_place', label: '2nd Place', points: 5 },
