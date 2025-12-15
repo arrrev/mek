@@ -66,10 +66,22 @@ export default function Analytics() {
       const response = await fetch(
         `/api/analytics?startDate=${startDate}&endDate=${endDate}`
       );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch analytics' }));
+        console.error('Error fetching analytics:', errorData.error || 'Failed to fetch analytics');
+        setData(null);
+        return;
+      }
       const result = await response.json();
-      setData(result);
+      // Ensure result has the expected structure
+      if (result && typeof result === 'object') {
+        setData(result);
+      } else {
+        setData(null);
+      }
     } catch (error) {
       console.error('Error fetching analytics:', error);
+      setData(null);
     } finally {
       setLoading(false);
     }

@@ -34,10 +34,19 @@ export default function GameHistory() {
     setLoading(true);
     try {
       const response = await fetch('/api/games');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch games' }));
+        toastError(errorData.error || 'Failed to fetch games');
+        setGames([]);
+        return;
+      }
       const data = await response.json();
-      setGames(data);
+      // Ensure data is an array
+      setGames(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching games:', error);
+      toastError('Failed to fetch games. Please check your connection.');
+      setGames([]);
     } finally {
       setLoading(false);
     }
