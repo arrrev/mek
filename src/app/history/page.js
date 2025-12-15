@@ -37,8 +37,9 @@ export default function GameHistory() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Failed to fetch games' }));
         const errorMessage = errorData.error || 'Failed to fetch games';
+        const errorCode = errorData.code ? ` (Code: ${errorData.code})` : '';
         console.error('API Error:', errorData);
-        toastError(errorMessage);
+        toastError(`${errorMessage}${errorCode}`);
         setGames([]);
         return;
       }

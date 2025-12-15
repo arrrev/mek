@@ -62,12 +62,18 @@ export async function GET(request) {
     return NextResponse.json(result.rows);
   } catch (error) {
     console.error('Error fetching games:', error);
-    // Provide more detailed error information in development
-    const errorMessage = process.env.NODE_ENV === 'development' 
-      ? error.message || 'Failed to fetch games'
-      : 'Failed to fetch games';
+    // Always include error message for debugging (sanitized for production)
+    const errorMessage = error.message || 'Failed to fetch games';
+    // Include stack trace only in development
+    const errorDetails = process.env.NODE_ENV === 'development' 
+      ? { stack: error.stack, code: error.code }
+      : { code: error.code };
+    
     return NextResponse.json(
-      { error: errorMessage, details: process.env.NODE_ENV === 'development' ? error.stack : undefined },
+      { 
+        error: errorMessage,
+        ...errorDetails
+      },
       { status: 500 }
     );
   }
