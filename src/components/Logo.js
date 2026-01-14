@@ -13,3 +13,4 @@ export default function Logo({ className = '' }) {
     </div>
   );
 }
+

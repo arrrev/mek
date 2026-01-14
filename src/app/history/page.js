@@ -14,7 +14,7 @@ const ACTION_TYPES = {
   win: 'Win',
 };
 
-const ACCESS_CODE = '1461';
+const ACCESS_CODES = ['1461', '6669'];
 
 export default function GameHistory() {
   const router = useRouter();
@@ -76,7 +76,7 @@ export default function GameHistory() {
 
   const handleDeleteAuthSubmit = (e) => {
     e.preventDefault();
-    if (deleteAccessCode === ACCESS_CODE) {
+    if (ACCESS_CODES.includes(deleteAccessCode)) {
       sessionStorage.setItem('record_game_auth', 'true');
       success('Access granted!');
       setShowDeleteAuth(false);
@@ -124,7 +124,7 @@ export default function GameHistory() {
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Game History</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Game History</h1>
           <div className="flex gap-2 w-full sm:w-auto">
             <Link href="/record" className="btn-primary flex-1 sm:flex-none text-sm sm:text-base">
               + New Game
@@ -152,7 +152,7 @@ export default function GameHistory() {
               <div key={game.id} className="card">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-movato-secondary">
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                       {formatDate(game.game_date)}
                     </h3>
                     <p className="text-sm text-gray-500">
@@ -195,7 +195,7 @@ export default function GameHistory() {
                           <span className="font-medium">
                             {ACTION_TYPES[action.action_type] || action.action_type}:
                           </span>{' '}
-                          <span className="text-movato-secondary">
+                          <span className="text-blue-700 font-semibold">
                             {action.player_name}
                           </span>
                         </div>
@@ -212,7 +212,7 @@ export default function GameHistory() {
         {showDeleteAuth && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="card max-w-md w-full">
-              <h3 className="text-xl font-bold text-movato-secondary mb-2">Access Required</h3>
+              <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">Access Required</h3>
               <p className="text-gray-600 mb-4 text-sm">Please enter the access code to delete games.</p>
               <form onSubmit={handleDeleteAuthSubmit}>
                 <input

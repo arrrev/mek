@@ -217,9 +217,9 @@ export default function Analytics() {
       return <span className="text-gray-400 ml-1">↕</span>;
     }
     return sortDirection === 'asc' ? (
-      <span className="text-movato-secondary ml-1">↑</span>
+      <span className="text-blue-700 ml-1">↑</span>
     ) : (
-      <span className="text-movato-secondary ml-1">↓</span>
+      <span className="text-blue-700 ml-1">↓</span>
     );
   };
 
@@ -233,17 +233,17 @@ export default function Analytics() {
               ← Home
             </button>
           </div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-movato-secondary break-words">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent break-words">
             Analytics & Leaderboard
           </h1>
         </div>
 
         <div className="card mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <h2 className="text-lg sm:text-xl font-bold text-movato-secondary">How It Works</h2>
+            <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">How It Works</h2>
             <button
               onClick={() => setShowHowItWorks(!showHowItWorks)}
-              className="text-sm sm:text-base text-movato-secondary hover:text-movato-primary font-medium"
+              className="text-sm sm:text-base text-blue-700 hover:text-movato-primary font-medium"
             >
               {showHowItWorks ? '▼ Hide' : '▶ Show'}
             </button>
@@ -307,8 +307,24 @@ export default function Analytics() {
         </div>
 
         <div className="card mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Select Period</h2>
-          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl font-bold">Select Period</h2>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <button
+                onClick={() => router.push('/record')}
+                className="btn-primary flex-1 sm:flex-none text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2"
+              >
+                📝 Record Game
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className="btn-secondary flex-1 sm:flex-none text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2"
+              >
+                ← Home
+              </button>
+            </div>
+          </div>
+
           <div className="mb-3 sm:mb-4 flex flex-wrap gap-2">
             {Object.entries(DATE_PRESETS).map(([key, label]) => (
               <button
@@ -356,7 +372,7 @@ export default function Analytics() {
         ) : data ? (
           <>
             <div className="card mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-movato-secondary break-words">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent break-words">
                 Leaderboard Chart
               </h2>
               <div className="h-64 sm:h-80 md:h-96 w-full overflow-x-auto">
@@ -400,7 +416,7 @@ export default function Analytics() {
             </div>
 
             <div className="card">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-movato-secondary break-words">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent break-words">
                 Detailed Leaderboard
               </h2>
               <div className="overflow-x-auto -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
@@ -482,7 +498,7 @@ export default function Analytics() {
                             />
                             <button
                               onClick={() => router.push(`/player/${player.playerId}`)}
-                              className="text-movato-secondary hover:text-movato-primary hover:underline"
+                              className="text-blue-700 hover:text-movato-primary hover:underline font-semibold"
                             >
                               {player.playerName}
                             </button>

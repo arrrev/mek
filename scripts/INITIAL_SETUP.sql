@@ -63,3 +63,4 @@ ON CONFLICT (name) DO NOTHING;
 -- You should now see 7 players in the database
 -- The app is ready to record games!
 -- ============================================
+

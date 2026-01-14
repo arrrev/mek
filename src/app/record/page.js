@@ -14,7 +14,7 @@ const ACTION_TYPES = [
   { value: 'win', label: 'Win', points: 10 },
 ];
 
-const ACCESS_CODE = '1461';
+const ACCESS_CODES = ['1461', '6669'];
 
 export default function RecordGame() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function RecordGame() {
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-    if (accessCode === ACCESS_CODE) {
+    if (ACCESS_CODES.includes(accessCode)) {
       setIsAuthenticated(true);
       sessionStorage.setItem('record_game_auth', 'true');
       success('Access granted!');
@@ -162,7 +162,7 @@ export default function RecordGame() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="card max-w-md w-full">
-          <h1 className="text-3xl font-bold text-movato-secondary mb-2">Access Required</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">Access Required</h1>
           <p className="text-gray-600 mb-6">Please enter the access code to record games.</p>
           <form onSubmit={handleCodeSubmit}>
             <input
@@ -196,7 +196,7 @@ export default function RecordGame() {
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Record Game</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Record Game</h1>
           <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={() => setShowPlayerManager(true)}
@@ -223,7 +223,7 @@ export default function RecordGame() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="card max-w-md w-full">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-movato-secondary">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                   Assign {actionModal.actionInfo.label}
                 </h3>
                 <button
@@ -357,7 +357,7 @@ export default function RecordGame() {
                         className="flex items-center justify-between p-2 bg-white rounded-lg"
                       >
                         <span className="font-medium">
-                          {actionInfo.label}: <span className="text-movato-secondary">{player?.name}</span>
+                          {actionInfo.label}: <span className="text-blue-700 font-semibold">{player?.name}</span>
                         </span>
                         <button
                           type="button"

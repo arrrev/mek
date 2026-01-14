@@ -174,8 +174,8 @@ Example: 20 total games, player played 18 → multiply by 0.9
 
 ## Access Codes
 
-- **Record Game:** 1461
-- **Import Games:** 1461
+- **Record Game:** 1461 or 6669
+- **Import Games:** 1461 or 6669
 
 ## Environment Variables
 

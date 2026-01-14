@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToaster } from '@/components/Toaster';
 
-const ACCESS_CODE = '1461';
+const ACCESS_CODES = ['1461', '6669'];
 
 const ACTION_TYPE_MAP = {
   'Win': 'win',
@@ -33,7 +33,7 @@ export default function ImportPage() {
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-    if (accessCode === ACCESS_CODE) {
+    if (ACCESS_CODES.includes(accessCode)) {
       setIsAuthenticated(true);
       sessionStorage.setItem('record_game_auth', 'true');
       success('Access granted!');
@@ -47,7 +47,7 @@ export default function ImportPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="card max-w-md w-full">
-          <h1 className="text-3xl font-bold text-movato-secondary mb-2">Access Required</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">Access Required</h1>
           <p className="text-gray-600 mb-6">Please enter the access code to import games.</p>
           <form onSubmit={handleCodeSubmit}>
             <input
@@ -208,7 +208,7 @@ export default function ImportPage() {
     <div className="min-h-screen p-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">Import Games</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Import Games</h1>
           <button onClick={() => router.push('/')} className="btn-secondary w-full sm:w-auto text-sm sm:text-base">
             ← Home
           </button>
@@ -245,7 +245,7 @@ export default function ImportPage() {
               <a
                 href="/sample_games.csv"
                 download
-                className="text-sm text-movato-secondary hover:underline"
+                className="text-sm text-blue-700 hover:underline"
               >
                 📥 Download Sample CSV
               </a>
@@ -253,7 +253,7 @@ export default function ImportPage() {
             <p className="text-xs text-gray-500 mt-2">
               CSV Format: Date, Round, Participants (comma-separated), Win, 2nd place, Barking & Difuse, Barking & Dead, 1st exploaded, 1st dead
               <br />
-              <span className="text-movato-secondary font-semibold">Note:</span> The "Participants" column lists ALL players who were present, even if they have no actions.
+              <span className="text-blue-700 font-semibold">Note:</span> The "Participants" column lists ALL players who were present, even if they have no actions.
             </p>
           </div>
           <button
@@ -304,7 +304,7 @@ export default function ImportPage() {
                         <span className="font-medium">
                           {Object.keys(ACTION_TYPE_MAP).find(k => ACTION_TYPE_MAP[k] === action.actionType)}:
                         </span>{' '}
-                        <span className="text-movato-secondary">{action.playerName}</span>
+                        <span className="text-blue-700 font-semibold">{action.playerName}</span>
                       </span>
                     ))}
                   </div>

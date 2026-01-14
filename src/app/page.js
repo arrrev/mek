@@ -13,7 +13,7 @@ export default function Home() {
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-kittens-red via-kittens-orange to-kittens-yellow bg-clip-text text-transparent">
           🐱 Exploding Kittens
         </h1>
-        <h2 className="text-xl sm:text-2xl font-semibold text-movato-secondary mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-6 sm:mb-8">
           Championship Tracker
         </h2>
         

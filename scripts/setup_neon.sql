@@ -52,3 +52,4 @@ INSERT INTO players (name, color) VALUES
   ('Serine', '#FF6B35'),
   ('Davo', '#FF6B35')
 ON CONFLICT (name) DO NOTHING;
+

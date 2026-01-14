@@ -179,7 +179,7 @@ export default function PlayerStats() {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-movato-secondary">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
               {data.player.name}
             </h1>
             <p className="text-gray-600 mt-1 text-sm sm:text-base">Player Statistics</p>
@@ -239,7 +239,7 @@ export default function PlayerStats() {
             <div className="text-gray-600 mt-1">Total Points</div>
           </div>
           <div className="card text-center">
-            <div className="text-3xl font-bold text-movato-secondary">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
               {data.gamesPlayed} / {data.totalGames}
             </div>
             <div className="text-gray-600 mt-1">Games Played</div>
@@ -295,7 +295,7 @@ export default function PlayerStats() {
             {Object.entries(data.stats).map(([key, value]) => (
               <div key={key} className="p-4 bg-gray-50 rounded-lg">
                 <div className="text-sm text-gray-600">{ACTION_TYPES[key] || key}</div>
-                <div className="text-2xl font-bold text-movato-secondary">{value}</div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">{value}</div>
               </div>
             ))}
           </div>
